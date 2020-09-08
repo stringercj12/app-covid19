@@ -9,10 +9,12 @@ export const Container = styled.SafeAreaView`
 `;
 
 export const Header = styled.View`
-  padding-top: 30px;
-  width: 375px;
-  height: 310px;
-  left: 0px;
+  padding-top: 35px;
+  /* position: absolute; */
+  /* width: 375px; */
+  height: 290px;
+  margin-top: -${Constants.statusBarHeight}px;
+  /* flex: 1; */
   background-color: #473F97;
   border-bottom-left-radius: 40px;
   border-bottom-right-radius: 40px;
@@ -26,7 +28,7 @@ export const HeaderButtons = styled.View`
   align-items: center;
   justify-content: space-between;
   flex-direction: row;
-  height: 25px;
+  /* height: 20px; */
   padding: 0px 20px;
 `;
 
@@ -34,7 +36,7 @@ export const ButtonMenu = styled.TouchableOpacity`
 
 `;
 
-export const Buttonalert = styled.TouchableOpacity`
+export const ButtonAlert = styled.TouchableOpacity`
 
 `;
 
@@ -131,7 +133,8 @@ export const HeaderCardButtonText = styled.Text`
 
 export const CardPrevention = styled.View`
   padding: 20px;
-  margin-top: 10px;
+  /* margin-top: 10px; */
+  margin-bottom:10px;
 `;
 
 export const CardPreventiontitle = styled.Text`
@@ -177,7 +180,7 @@ export const CardIconText = styled.Text`
 
 export const CardInstructionsArea = styled.View`
   padding: 20px;
-  margin-bottom: 20px;
+  margin-top: -30px;
 `;
 
 export const CardInstructions = styled.View`
@@ -188,7 +191,7 @@ export const CardInstructions = styled.View`
   /* background: linear-gradient(269.6deg, #56549E 0.35%, #AEA1E6 101.48%); */
   border-radius: 16px;
   flex-direction: row;
-  position: relative;
+  /* position: relative; */
 `;
 
 export const CardInstructionsImage = styled.Image`

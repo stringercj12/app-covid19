@@ -6,7 +6,7 @@ import {
     HeaderText,
     HeaderButtons,
     ButtonMenu,
-    Buttonalert,
+    ButtonAlert,
     HeaderTitle,
     Title,
     SelectCountry,
@@ -45,9 +45,9 @@ const Home: React.FC = () => {
                     <ButtonMenu onPress={() => { }}>
                         <SimpleLineIcons name="menu" size={24} color="#fff" />
                     </ButtonMenu>
-                    <Buttonalert onPress={() => { }}>
+                    <ButtonAlert onPress={() => { }}>
                         <Feather name="bell" size={24} color="#fff" />
-                    </Buttonalert>
+                    </ButtonAlert>
                 </HeaderButtons>
 
                 <HeaderTitle>
