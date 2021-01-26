@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text } from 'react-native';
 import { Feather, SimpleLineIcons } from '@expo/vector-icons';
 
@@ -25,8 +25,53 @@ import {
   CardGrafic,
   CardGraficTitle,
 } from './styles';
+import api from '../../services/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
 
 const Statistics: React.FC = () => {
+  const [global, setGlobal] = useState<any>();
+  const [country, setCountry] = useState<any>([]);
+  const [data, setData] = useState<any>([]);
+  const [selectedCountry, setSelectedCountry] = useState<any>();
+  const [filtro, setFiltro] = useState('country');
+
+  async function carregarGlobal() {
+    const { data } = await api.get('all');
+
+    await setData(data);
+    await setFiltro('global');
+  }
+  async function carregarMyCountry() {
+    const { data } = await api.get(`countries/${selectedCountry}`);
+
+    await setData(data);
+    await setFiltro('country');
+  }
+
+
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('@my_country')
+      if (value !== null) {
+        // value previously stored
+        await setSelectedCountry(value)
+        console.log(value)
+        await carregarMyCountry()
+      }
+    } catch (e) {
+      // error reading value
+    }
+  }
+
+  useEffect(() => {
+    async function init() {
+      await getData();
+    }
+
+    init();
+  }, []);
+
   return (
     <Container>
       <Header>
@@ -40,14 +85,24 @@ const Statistics: React.FC = () => {
         </HeaderButtons>
 
         <HeaderSegment>
-          <HeaderSegmentButton style={{ backgroundColor: '#fff' }}>
+          <HeaderSegmentButton
+            style={filtro === 'country' ? { backgroundColor: '#fff' } : {}}
+            onPress={() => {
+              carregarMyCountry();
+            }}
+          >
             <HeaderSegmentButtonText>
-              My Country
+              My Country {selectedCountry}
             </HeaderSegmentButtonText>
           </HeaderSegmentButton>
 
 
-          <HeaderSegmentButton>
+          <HeaderSegmentButton
+            style={filtro === 'global' ? { backgroundColor: '#fff' } : {}}
+            onPress={() => {
+              carregarGlobal();
+            }}
+          >
             <HeaderSegmentButtonText>
               Global
             </HeaderSegmentButtonText>
@@ -82,12 +137,12 @@ const Statistics: React.FC = () => {
 
         <CardItemAffected>
           <CardTitle>Affected</CardTitle>
-          <CardValue>336,851</CardValue>
+          <CardValue>{data?.cases}</CardValue>
         </CardItemAffected>
 
         <CardItemDeath>
           <CardTitle>Death</CardTitle>
-          <CardValue>9,620</CardValue>
+          <CardValue>{data?.deaths}</CardValue>
         </CardItemDeath>
 
 
@@ -95,21 +150,24 @@ const Statistics: React.FC = () => {
 
       <CardStatus>
 
-        <CardItemRecovered>
+        <CardItemRecovered style={filtro === 'global' ? { width: '50%' } : {}}>
           <CardTitle>Recovered</CardTitle>
-          <CardValue>17,977</CardValue>
+          <CardValue>{data?.recovered}</CardValue>
         </CardItemRecovered>
 
-        <CardItemActive>
-          <CardTitle>Active</CardTitle>
-          <CardValue>301,251</CardValue>
-        </CardItemActive>
+        {filtro != 'global' && (
+          <>
+            <CardItemActive>
+              <CardTitle>Active</CardTitle>
+              <CardValue>{data?.active}</CardValue>
+            </CardItemActive>
 
-        <CardItemSerious>
-          <CardTitle>Serious</CardTitle>
-          <CardValue>8,702</CardValue>
-        </CardItemSerious>
-
+            <CardItemSerious>
+              <CardTitle>Serious</CardTitle>
+              <CardValue>{data?.critical}</CardValue>
+            </CardItemSerious>
+          </>
+        )}
       </CardStatus>
 
 

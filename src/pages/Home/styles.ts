@@ -68,6 +68,7 @@ export const SelectCountry = styled.View`
   border-radius: 50px;
   align-items: center;
   justify-content: center;
+  position: relative;
 `;
 
 export const HeaderCard = styled.View`

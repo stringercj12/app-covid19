@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text } from 'react-native';
 import {
     Container,
@@ -36,8 +36,32 @@ import ImageTest from '../../assets/image-test.png';
 import ImageDistance from '../../assets/distance.png';
 import ImageMao from '../../assets/mao.png';
 import ImageMask from '../../assets/mask.png';
+import { Picker } from '@react-native-picker/picker';
+import api from '../../services/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Home: React.FC = () => {
+    const [language, setLanguage] = useState<any>();
+    const [country, setCountry] = useState<any>([]);
+
+    async function carregarPaises() {
+        const { data } = await api.get('countries');
+
+        setCountry(data);
+    }
+
+    const storeData = async (value: any) => {
+        try {
+            await AsyncStorage.setItem('@my_country', value)
+            setLanguage(value)
+        } catch (e) {
+            // saving error
+        }
+    }
+
+    useEffect(() => {
+        carregarPaises();
+    }, [])
     return (
         <Container>
             <Header>
@@ -53,7 +77,15 @@ const Home: React.FC = () => {
                 <HeaderTitle>
                     <Title>Covid-19</Title>
                     <SelectCountry>
-                        <Text>Aqui</Text>
+                        <Picker
+                            mode={'dropdown'}
+                            selectedValue={language}
+                            itemStyle={{ height: 50, width: 100, backgroundColor: 'transparent' }}
+                            onValueChange={(itemValue, itemIndex) => storeData(itemValue)}>
+                            {country.map((item: any) => (
+                                <Picker.Item key={item.country} label={item.country} value={item.country} />
+                            ))}
+                        </Picker>
                     </SelectCountry>
                 </HeaderTitle>
 
@@ -66,13 +98,13 @@ const Home: React.FC = () => {
                     </HeaderCardDescription>
                     <HeaderCardButtons>
                         <HeaderCardButtonCall>
-                                <Foundation name="telephone" size={24} color="#fff" />
+                            <Foundation name="telephone" size={24} color="#fff" />
                             <HeaderCardButtonText>
                                 Call Now
                                 </HeaderCardButtonText>
                         </HeaderCardButtonCall>
                         <HeaderCardButtonSMS>
-                                <MaterialCommunityIcons name="chat" size={24} color="#fff" />
+                            <MaterialCommunityIcons name="chat" size={24} color="#fff" />
                             <HeaderCardButtonText>
                                 Send SMS
                                 </HeaderCardButtonText>
@@ -116,7 +148,7 @@ const Home: React.FC = () => {
                     </CardDescription>
                 </CardInstructions>
             </CardInstructionsArea>
-        </Container>
+        </Container >
     );
 }
 
